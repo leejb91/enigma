@@ -4,16 +4,15 @@ import Button from 'react-toolbox/lib/button';
 import DatePicker from 'react-toolbox/lib/date_picker';
 import Input from 'react-toolbox/lib/input';
 
+import ToviaStore from '../stores/ToviaStore';
+
 class ToviaComponent extends React.Component {
 	
 	constructor() {
 		super();
 
-		this.state = {
-			name: '',
-			message: '',
-			expiration: '',
-		};
+		this.state = ToviaStore.form;
+		
 		this.handleChange = this.handleChange.bind(this);
 		this.encrypt = this.encrypt.bind(this);
 		this.decrypt = this.decrypt.bind(this);
