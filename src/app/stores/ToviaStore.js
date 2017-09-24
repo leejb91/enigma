@@ -20,7 +20,7 @@ class ToviaStore extends EventEmitter {
 	handleActions(action) {
 		switch (action.type) {
 			case 'SECRET':
-				this.message = action.text;
+				this.message = action.message;
 				break;
 		}
 	}

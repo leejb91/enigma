@@ -1,8 +1,11 @@
+import axios from 'axios';
 import dispatcher from '../dispatcher';
 
 export function newSecret(form) {
-	dispatcher.dispatch({
-		type: 'SECRET',
-		form: form
-	});
+	axios.post('/api/encrypt', form).then((res) => {
+		dispatcher.dispatch({
+			type: 'SECRET',
+			message: res.message
+		});
+	})
 }
