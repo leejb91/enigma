@@ -4,6 +4,7 @@ import Button from 'react-toolbox/lib/button';
 import DatePicker from 'react-toolbox/lib/date_picker';
 import Input from 'react-toolbox/lib/input';
 
+import * as ToviaActions from '../actions/ToviaActions';
 import ToviaStore from '../stores/ToviaStore';
 
 class ToviaComponent extends React.Component {
@@ -11,19 +12,31 @@ class ToviaComponent extends React.Component {
 	constructor() {
 		super();
 
-		this.state = ToviaStore.form;
-		
+		this.state = {
+			form: ToviaStore.form,
+			// message: ToviaStore.message
+		};
+
 		this.handleChange = this.handleChange.bind(this);
 		this.encrypt = this.encrypt.bind(this);
 		this.decrypt = this.decrypt.bind(this);
 	}
+
+	componentWillMount() {
+		ToviaStore.on('change', () => {
+			this.setState(ToviaStore.form);
+		})
+	}
 	
 	handleChange(name, value) {
-		this.setState({ [name]: value });
+		const formChange = this.state.form;
+		formChange[name] = value;
+		this.setState({formChange});
 	};
 
 	encrypt() {
-		console.log(this.state)
+		console.log('encrypt in jsx');
+		ToviaActions.newSecret(this.state.form);
 	};
 
 	decrypt() {
@@ -43,7 +56,7 @@ class ToviaComponent extends React.Component {
 							type='text'
 							label='Name'
 							name='name'
-							value={this.state.name}
+							value={this.state.form.name}
 							onChange={this.handleChange.bind(this, 'name')}
 						/>
 						<Input
@@ -52,14 +65,14 @@ class ToviaComponent extends React.Component {
 							name='message'
 							multiline={true}
 							rows={3}
-							value={this.state.message}
+							value={this.state.form.message}
 							maxLength={120}
 							onChange={this.handleChange.bind(this, 'message')}
 						/>
 						<DatePicker
 							label='Expiration date'
+							value={this.state.form.expiration}
 							onChange={this.handleChange.bind(this, 'expiration')}
-							value={this.state.expiration}
 							sundayFirstDayOfWeek
 						/>
 						<Button  />
@@ -70,6 +83,9 @@ class ToviaComponent extends React.Component {
 					</CardActions>
 				</Card>
 				<span>Your passphrase is - {secret}</span>
+				<p>
+					{/* {message} */}
+				</p>
 			</div>
 		);
 	}
